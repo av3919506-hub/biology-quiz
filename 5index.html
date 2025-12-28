@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Class 9 Biology Quiz</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+            padding: 20px;
+        }
+        .quiz-box {
+            background: #fff;
+            max-width: 750px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1a252f;
+        }
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+        #result {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+            color: #16a085;
+        }
+        .certificate {
+            background: #f1f8e9;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 2px dashed #2ecc71;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-box">
+    <h1>Class 9 Biology Quiz</h1>
+    <p id="timer">Time left: 02:00</p>
+
+    <form id="quizForm"></form>
+
+    <button id="submitBtn">Submit Quiz</button>
+
+    <div id="result"></div>
+
+    <div class="footer">
+        Created by <b>Aditya Verma</b>, Class 9th D
+    </div>
+</div>
+
+<script>
+// Quiz questions
+const questions = [
+    {q:"1. What is the basic unit of life?", options:["Cell","Tissue","Organ"], answer:0},
+    {q:"2. Which organelle controls all cell activities?", options:["Nucleus","Ribosome","Vacuole"], answer:0},
+    {q:"3. Powerhouse of the cell is?", options:["Mitochondria","Chloroplast","Golgi body"], answer:0},
+    {q:"4. Photosynthesis occurs in?", options:["Chloroplast","Mitochondria","Nucleus"], answer:0},
+    {q:"5. Which gas is essential for respiration?", options:["Oxygen","Carbon dioxide","Nitrogen"], answer:0},
+    {q:"6. Transport of water in plants is done by?", options:["Xylem","Phloem","Cortex"], answer:0},
+    {q:"7. Food is transported in plants by?", options:["Phloem","Xylem","Root hairs"], answer:0},
+    {q:"8. Amoeba moves with the help of?", options:["Pseudopodia","Cilia","Flagella"], answer:0},
+    {q:"9. Which process releases energy?", options:["Respiration","Photosynthesis","Transpiration"], answer:0},
+    {q:"10. Which part absorbs water from soil?", options:["Roots","Stem","Leaves"], answer:0}
+];
+
+const form = document.getElementById("quizForm");
+const submitBtn = document.getElementById("submitBtn");
+const resultDiv = document.getElementById("result");
+const timerDisplay = document.getElementById("timer");
+
+let time = 120; // 2 minutes
+
+// Timer countdown
+function startTimer() {
+    const interval = setInterval(()=>{
+        let min = Math.floor(time/60);
+        let sec = time%60;
+        timerDisplay.innerText = `Time left: ${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        if(time===0){
+            clearInterval(interval);
+            checkScore();
+            submitBtn.disabled=true;
+        }
+        time--;
+    },1000);
+}
+
+// Display questions
+questions.forEach((q,i)=>{
+    const div = document.createElement("div");
+    div.className="question";
+    let html = `<p>${q.q}</p>`;
+    q.options.forEach((opt,j)=>{
+        html+=`<input type="radio" name="q${i}" value="${j}"> ${opt}<br>`;
+    });
+    div.innerHTML = html;
+    form.appendChild(div);
+});
+
+// Calculate score and show result + certificate
+function checkScore(){
+    let score=0;
+    questions.forEach((q,i)=>{
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected && parseInt(selected.value)===q.answer) score++;
+    });
+
+    let percent = Math.round((score/questions.length)*100);
+    let status = percent>=50 ? "Pass" : "Fail";
+
+    resultDiv.innerHTML=`<h2>Score: ${score} / ${questions.length} (${percent}%)</h2>
+                          <h3>Status: ${status}</h3>
+                          <div class="certificate">
+                          <h3>Certificate</h3>
+                          <p>This is to certify that <b>Aditya Verma, Class 9th D</b> attempted the Class 9 Biology Quiz and scored <b>${percent}%</b>.</p>
+                          </div>`;
+}
+
+// Event
+submitBtn.addEventListener("click",checkScore);
+startTimer();
+</script>
+
+</body>
+</html>
